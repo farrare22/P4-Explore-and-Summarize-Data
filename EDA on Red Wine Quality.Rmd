@@ -512,7 +512,7 @@ Yes, I created a model.  However, the best R-squared value I could get was 0.357
 # Final Plots and Summary
 
 ### Plot One
-```{r echo=FALSE, Plot_One}
+```{r echo=FALSE, warning=FALSE, Plot_One}
 ggplot(data = wine,
        aes(x = residual.sugar)) + 
   geom_histogram(binwidth = .1, color = 'black', fill='orange') +
@@ -524,7 +524,13 @@ ggplot(data = wine,
 
 ### Description One
 
-The residual sugar left at the end of the wine making process determines if the wine is "dry" meaning little sugar, or "sweet" meaning more sugar.  Typically, 45 g/dm^3^ is considered sweet.  This plot shows that for our dataset, all our wines are "dry" with most containing between 1.5 adn 3.5 g/dm^3^.
+The residual sugar left at the end of the wine making process determines if the wine is "dry" meaning little sugar, or "sweet" meaning more sugar.  Typically, 45 g/dm^3^ is considered sweet.  This plot shows that for our dataset, all our wines are "dry" with most containing between 1.5 and 3.5 g/dm^3^.  The 95th quantile of residual.suger is 5.1 which further emphasizes that the wines in the dataset are "dry":
+
+```{r echo=FALSE, warning=FALSE}
+quantile(wine$residual.sugar, .95)
+
+```
+
 
 ### Plot Two
 ```{r echo=FALSE, Plot_Two}
@@ -540,7 +546,12 @@ ggplot(data = wine,
 
 ### Description Two
 
-This scatterplot shows the strong relatinship between alcohol and the quality of the wine.  As alcohol level increases, the qualtiy of the wine tends to increase.
+This scatterplot shows the relatinship between alcohol and the quality of the wine.  As alcohol level increases, the qualtiy of the wine tends to increase.  Pearson's product-moment correlation shows the correlataion between quality and alcohol to be 0.476, which is one of the stronger correlations for this data:
+
+```{r echo=FALSE, warning=FALSE}
+with(wine, cor.test(x = quality, y = alcohol))
+```
+
 
 ### Plot Three
 ```{r echo=FALSE, Plot_Three}
@@ -558,7 +569,11 @@ ggplot(data = wine,
 
 ### Description Three
 
-This plot shows how two variables, volatile acidity (acetic acid, aka vinegar) and alcohol, influence the quality of wine.  As the acid decreases and the alcohol increases, the quality of the wine increases.  This is shown by the shift of color to the right (higher alcohol) and the points shifting downward (less acetic acid) as the quality improves.
+This plot shows how two variables, volatile acidity (acetic acid, aka vinegar) and alcohol, influence the quality of wine.  As the acid decreases and the alcohol increases, the quality of the wine increases.  This is shown by the shift of color to the right (higher alcohol) and the points shifting downward (less acetic acid) as the quality improves.  Just as there is a relationship between quality and alcohol as shown earlier, there is also a correlation between volatile.acidity and quality.  Again, using Pearson's product-moment correlation, we see one of the stronger correlations at -0.391:
+
+```{r echo=FALSE, warning=FALSE}
+with(wine, cor.test(x = quality, y = volatile.acidity))
+```
 
 ------
 
@@ -583,5 +598,13 @@ Further, I made an attempt at creating a model, but to get the R-squared value h
 * pH
 
 Many of these variables are related.  For instance, pH measures acidity, so pH is directly realted to volatile and fixed acidity.  Sulpahates (an additive) is directly related to total sulfur dioxide since the additives are specifically designed to increase the SO~2~ level of wine.  And, of course chlorides (salt) had to be included as salt makes everything taste better.
+
+One of the struggles I had working with the data was when it came to creating different types of plots.  After workiong on the project for a while, I realized I had essentially 2 types of plots: histograms and scatterplots.  Unlike the price of diamonds from the class where there was a wide range and quantity of different numbers, the quality variable in the wine dataset was an integer with only 6 values.  Only after thinking about how to use this did it dawn on me to convert it to a factor.  That opened up the door for creating box plots and other plots using the factor.  I then applied this same methodology to create buckets for alcohol and density which I then used for coloring various plots.  
+
+Another struggle I had during the analysis was deciding on which plots to include and which to exclude.  When I started working on 2 and 3 variable plots, I had to determine whic plots to focus on and which to ignore.
+
+A success in the analysis finaly came when I remembered how to factor and cut variables and when I produced the "Quality by Volatile Acidity adn Alcohol" plot.  All of a sudden, everything seems to click and I could really see how the layering adn coloring could tell a nice story with a simple picture.
+
+One idea for future work would be to subset the data into the poor quality wines vs the better quality wines and try to determine which features drive each subset.  There were several plots that I created where a variable would show a nice trend through the better wines, but was inconclusive for the poor wines.  This indicates that there was some other variable or combination of variables that was driving quality down.  It would be nice to explore this further, but was beyond my skillset at this time.
 
 In conclusion, analyzing the red wine quality data allowed me to put into practice the tools and concepts learned in the Data Analysis with R course.  It also taught me quite abit about red wine quality.
